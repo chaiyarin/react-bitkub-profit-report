@@ -31,7 +31,9 @@ function App() {
   )
 
   useEffect(async () => {
-    await fetchPrice()
+    const interval = setInterval(async () => {
+      await fetchPrice()
+    }, 10000);
   }, [])
 
   const calculateInvestMoney = () => {
@@ -51,8 +53,13 @@ function App() {
   }
 
   const fetchPrice = async () => {
-    const res = await fetch('https://api.bitkub.com/api/market/ticker?sym=THB_DOT')
+    const res = await fetch('https://api.bitkub.com/api/market/ticker?sym=THB_DOT', {
+      headers: {
+        'Cache-Control': 'no-cache'
+      }
+    })
     const data = await res.json()
+    console.log(data)
     setPrice(data.THB_DOT)
     const investMoney = calculateInvestMoney()
     const profitMoney = calculateProfit(data.THB_DOT.last)
