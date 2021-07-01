@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import NumberFormat from 'react-number-format'
 
 function App() {
 
@@ -42,12 +43,8 @@ function App() {
   }
 
   const calculateProfit = (price) => {
-    console.log('price', price)
     let profitMoney = 0;
     for (let index = 0; index < myCryptos.length; index++) {
-      console.log((myCryptos[index].unit * price))
-      console.log((myCryptos[index].unit * myCryptos[index].price))
-      console.log(profitMoney)
       profitMoney = ((myCryptos[index].unit * price) - (myCryptos[index].unit * myCryptos[index].price)) + profitMoney
     }
     return profitMoney
@@ -56,7 +53,6 @@ function App() {
   const fetchPrice = async () => {
     const res = await fetch('https://api.bitkub.com/api/market/ticker?sym=THB_DOT')
     const data = await res.json()
-    console.log(data);
     setPrice(data.THB_DOT)
     const investMoney = calculateInvestMoney()
     const profitMoney = calculateProfit(data.THB_DOT.last)
@@ -85,8 +81,8 @@ function App() {
                 <td>{price && price.last}</td>
                 <td>{crypto.price}</td>
                 <td>{crypto.unit}</td>
-                <td>{crypto.unit * crypto.price}</td>
-                <td>{(price.last === null || price.last === undefined) ? 'รอคำนวน' : (crypto.unit * price.last) - (crypto.unit * crypto.price)}</td>
+                <td> <NumberFormat value={crypto.unit * crypto.price} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
+                <td> <NumberFormat value={(price.last === null || price.last === undefined) ? 'รอคำนวน' : (crypto.unit * price.last) - (crypto.unit * crypto.price)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
               </tr>
             )
           })}
@@ -102,11 +98,11 @@ function App() {
         <tbody>
           <tr>
             <td>จำนวนเงินลงทุน</td>
-            <td>{myMoney.invest_money}</td>
+            <td><NumberFormat value={myMoney.invest_money} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
           </tr>
           <tr>
             <td>กำไร/ขาดทุน รวมทั้งสิ้น</td>
-            <td>{myMoney.profit_money}</td>
+            <td><NumberFormat value={myMoney.profit_money} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
           </tr>
         </tbody>
       </table>
