@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import NumberFormat from 'react-number-format'
+import { Helmet } from 'react-helmet'
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
   )
 
   useEffect(async () => {
+    fetchPrice()
     const interval = setInterval(async () => {
       await fetchPrice()
     }, 10000);
@@ -59,7 +61,6 @@ function App() {
       }
     })
     const data = await res.json()
-    console.log(data)
     setPrice(data.THB_DOT)
     const investMoney = calculateInvestMoney()
     const profitMoney = calculateProfit(data.THB_DOT.last)
@@ -68,7 +69,15 @@ function App() {
 
   return (
     <>
-      <div>ราคา dot ปัจุบัน : {price && price.last}</div>
+      <h1>ราคา dot ปัจุบัน : <div style={{ fontSize: '30vh' }}>{price && price.last} </div></h1>
+      <h1>กำไร / ขาดทุน :  <div style={myMoney.profit_money < 0 ? { color: 'red', fontSize: '30vh' } : { color: 'green', fontSize: '30vh' }}>
+        <NumberFormat value={myMoney.profit_money.toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat>
+      </div>
+      </h1>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>DOT: {(price.last === null || price.last === undefined) ? 'รอโหลด' : price.last + ''}</title>
+      </Helmet>
       <table border="1" style={{ marginTop: '20px' }}>
         <thead>
           <tr>
@@ -88,8 +97,8 @@ function App() {
                 <td>{price && price.last}</td>
                 <td>{crypto.price}</td>
                 <td>{crypto.unit}</td>
-                <td> <NumberFormat value={crypto.unit * crypto.price} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
-                <td> <NumberFormat value={(price.last === null || price.last === undefined) ? 'รอคำนวน' : (crypto.unit * price.last) - (crypto.unit * crypto.price)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
+                <td> <NumberFormat value={(crypto.unit * crypto.price).toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
+                <td style={((crypto.unit * price.last) - (crypto.unit * crypto.price)) < 0 ? { backgroundColor: 'red', color: 'white' } : { backgroundColor: 'green' }}> <NumberFormat value={(price.last === null || price.last === undefined) ? 'รอคำนวน' : ((crypto.unit * price.last) - (crypto.unit * crypto.price)).toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
               </tr>
             )
           })}
@@ -105,11 +114,11 @@ function App() {
         <tbody>
           <tr>
             <td>จำนวนเงินลงทุน</td>
-            <td><NumberFormat value={myMoney.invest_money} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
+            <td><NumberFormat value={myMoney.invest_money.toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
           </tr>
           <tr>
             <td>กำไร/ขาดทุน รวมทั้งสิ้น</td>
-            <td><NumberFormat value={myMoney.profit_money} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
+            <td style={myMoney.profit_money < 0 ? { backgroundColor: 'red', color: 'white' } : { backgroundColor: 'green' }}><NumberFormat value={myMoney.profit_money.toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
           </tr>
         </tbody>
       </table>
