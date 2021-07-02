@@ -87,6 +87,21 @@ function App() {
     setPriceSell(priceSellTemp)
   }
 
+  const calculateCoinPrice = (priceSellTemp) => {
+    if (priceSellTemp === '') {
+      setProfitWant(0)
+      return;
+    }
+    let allUnit = 0;
+    for (let index = 0; index < myCryptos.length; index++) {
+      allUnit = myCryptos[index].unit + allUnit
+    }
+
+    const profitTemp = (priceSellTemp * allUnit) - myMoney.invest_money
+
+    setProfitWant(profitTemp)
+  }
+
   return (
     <>
       <h1>ราคา dot ปัจุบัน : <div style={{ fontSize: '10vh' }}>{price && price.last} </div></h1>
@@ -160,9 +175,25 @@ function App() {
           </tr>
         </tbody>
       </table>
-      <div style={{ marginTop: '20px' }}>
-        <button>คำนวนราคาขาย</button>
-      </div>
+
+      <table border='1' style={{ marginTop: '20px' }}>
+        <thead>
+          <tr>
+            <th>หัวข้อ</th>
+            <th>ช่องกรอก</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ราคาขาย</td>
+            <td><input type="number" onChange={(e) => calculateCoinPrice(e.target.value)} /> </td>
+          </tr>
+          <tr>
+            <td>กำไรที่ได้</td>
+            <td>{profitWant}</td>
+          </tr>
+        </tbody>
+      </table>
     </>
   );
 }
