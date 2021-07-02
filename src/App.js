@@ -28,6 +28,11 @@ function App() {
         price: 503.42,
         unit: 19.814
       },
+      {
+        id: 5,
+        price: 480,
+        unit: 15.58593
+      }
     ]
   )
 
@@ -69,8 +74,8 @@ function App() {
 
   return (
     <>
-      <h1>ราคา dot ปัจุบัน : <div style={{ fontSize: '30vh' }}>{price && price.last} </div></h1>
-      <h1>กำไร / ขาดทุน :  <div style={myMoney.profit_money < 0 ? { color: 'red', fontSize: '30vh' } : { color: 'green', fontSize: '30vh' }}>
+      <h1>ราคา dot ปัจุบัน : <div style={{ fontSize: '10vh' }}>{price && price.last} </div></h1>
+      <h1>กำไร / ขาดทุน :  <div style={myMoney.profit_money < 0 ? { color: 'red', fontSize: '10vh' } : { color: 'green', fontSize: '10vh' }}>
         <NumberFormat value={myMoney.profit_money.toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat>
       </div>
       </h1>
@@ -98,7 +103,7 @@ function App() {
                 <td>{crypto.price}</td>
                 <td>{crypto.unit}</td>
                 <td> <NumberFormat value={(crypto.unit * crypto.price).toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
-                <td style={((crypto.unit * price.last) - (crypto.unit * crypto.price)) < 0 ? { backgroundColor: 'red', color: 'white' } : { backgroundColor: 'green' }}> <NumberFormat value={(price.last === null || price.last === undefined) ? 'รอคำนวน' : ((crypto.unit * price.last) - (crypto.unit * crypto.price)).toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
+                <td style={((crypto.unit * price.last) - (crypto.unit * crypto.price)) < 0 ? { backgroundColor: 'red', color: 'white' } : { backgroundColor: 'green', color: 'white' }}> <NumberFormat value={(price.last === null || price.last === undefined) ? 'รอคำนวน' : ((crypto.unit * price.last) - (crypto.unit * crypto.price)).toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
               </tr>
             )
           })}
@@ -118,7 +123,7 @@ function App() {
           </tr>
           <tr>
             <td>กำไร/ขาดทุน รวมทั้งสิ้น</td>
-            <td style={myMoney.profit_money < 0 ? { backgroundColor: 'red', color: 'white' } : { backgroundColor: 'green' }}><NumberFormat value={myMoney.profit_money.toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
+            <td style={myMoney.profit_money < 0 ? { backgroundColor: 'red', color: 'white' } : { backgroundColor: 'green', color: 'white'  }}><NumberFormat value={myMoney.profit_money.toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
           </tr>
         </tbody>
       </table>
