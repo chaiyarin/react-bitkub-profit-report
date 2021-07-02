@@ -6,6 +6,8 @@ function App() {
 
   const [price, setPrice] = new useState({})
   const [myMoney, setMyMoney] = new useState({ invest_money: 0, profit_money: 0 })
+  const [priceSell, setPriceSell] = new useState(0)
+  const [profitWant, setProfitWant] = new useState(0)
   const [myCryptos, setMyCrypto] = new useState(
     [
       {
@@ -72,6 +74,19 @@ function App() {
     setMyMoney({ invest_money: investMoney, profit_money: profitMoney })
   }
 
+  const calculatePriceSell = (profitInput) => {
+    if (profitInput === '') {
+      setPriceSell(0)
+      return;
+    }
+    let allUnit = 0;
+    for (let index = 0; index < myCryptos.length; index++) {
+      allUnit = myCryptos[index].unit + allUnit
+    }
+    const priceSellTemp = (myMoney.invest_money + parseInt(profitInput)) / allUnit
+    setPriceSell(priceSellTemp)
+  }
+
   return (
     <>
       <h1>ราคา dot ปัจุบัน : <div style={{ fontSize: '10vh' }}>{price && price.last} </div></h1>
@@ -123,10 +138,31 @@ function App() {
           </tr>
           <tr>
             <td>กำไร/ขาดทุน รวมทั้งสิ้น</td>
-            <td style={myMoney.profit_money < 0 ? { backgroundColor: 'red', color: 'white' } : { backgroundColor: 'green', color: 'white'  }}><NumberFormat value={myMoney.profit_money.toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
+            <td style={myMoney.profit_money < 0 ? { backgroundColor: 'red', color: 'white' } : { backgroundColor: 'green', color: 'white' }}><NumberFormat value={myMoney.profit_money.toFixed(2)} displayType={'text'} thousandSeparator={true}></NumberFormat></td>
           </tr>
         </tbody>
       </table>
+      <table border='1' style={{ marginTop: '20px' }}>
+        <thead>
+          <tr>
+            <th>หัวข้อ</th>
+            <th>ช่องกรอก</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>กำไรที่อยากได้</td>
+            <td><input type="number" onChange={(e) => calculatePriceSell(e.target.value)} /> </td>
+          </tr>
+          <tr>
+            <td>ต้องขายที่ราคา</td>
+            <td>{priceSell}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style={{ marginTop: '20px' }}>
+        <button>คำนวนราคาขาย</button>
+      </div>
     </>
   );
 }
